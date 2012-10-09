@@ -22,6 +22,7 @@ public class FileRipperTest extends TestCase {
 		checkNthLine(1, "one,two,three,four,\"fi,ve\"");
 		checkNthLine(2, "1,a,,,2");
 	}
+	
 
 	public void testIsInt() {
 		assertEquals(true, fileRipper.isInt("123"));
@@ -37,7 +38,7 @@ public class FileRipperTest extends TestCase {
 		checkColumnIsInt(1, false);
 		checkColumnIsInt(2, true);
 		checkColumnIsInt(3, false);
-		checkColumnIsInt(4, true);
+		checkColumnIsInt(4, false);
 	}
 
 	public void testGetColumnNames() {
@@ -45,8 +46,19 @@ public class FileRipperTest extends TestCase {
 		assertEquals(Arrays.asList("one", "two", "three", "four", "five"), Arrays.asList(actual));
 	}
 
+	public void testColumnInfo() {
+		ColumnInfo[] actual = fileRipper.getColumnInfo(getTextDotTxt());
+		assertEquals(Arrays.asList(//
+				ColumnInfo.makeAsInt("one"), //
+				ColumnInfo.makeAsVarChar("two", 1),//
+				ColumnInfo.makeAsInt("three"),//
+				ColumnInfo.makeAsVarChar("four", 2),//
+				ColumnInfo.makeAsVarChar("five", 3)//
+				),Arrays.asList(actual));
+	}
+
 	public void testCreateStatement() {
-		assertEquals("create table test( id integer auto_increment, PRIMARY KEY (id),one integer,two varchar(30),three integer,four varchar(30),five integer);", fileRipper.createStatement(getTextDotTxt()));
+		assertEquals("create table test( id integer auto_increment, PRIMARY KEY (id),one integer,two varchar(1),three integer,four varchar(2),five varchar(3));", fileRipper.createStatement(getTextDotTxt()));
 	}
 
 	public void testSplit() {
@@ -54,9 +66,10 @@ public class FileRipperTest extends TestCase {
 		checkSplit("a,b,", "a", "b", "");
 		checkSplit("a,,", "a", "", "");
 		checkSplit("a,,,c", "a", "", "", "c");
+		checkSplit("a,\"b,c\",c", "a", "b,c", "c");
 	}
 
-	private void checkSplit(String raw, String ...expected) {
+	private void checkSplit(String raw, String... expected) {
 		assertEquals(Arrays.asList(expected), fileRipper.split(raw));
 	}
 

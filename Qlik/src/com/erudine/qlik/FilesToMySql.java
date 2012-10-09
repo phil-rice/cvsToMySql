@@ -6,20 +6,21 @@ public class FilesToMySql {
 	public static void main(String[] args) {
 		final FileRipper ripper = new FileRipper();
 		ripper.map("\"Autonumber(1,1)\"", "autonumber");
-		ripper.walkFiles(new File("K:/Eur"), ripper.extension("csv"), new ICallback<File>() {
+		File root = new File("L:/Eur");
+		ripper.walkFiles(root, ripper.extension("csv"), new ICallback<File>() {
 			@Override
 			public void call(File file) {
 				String tableName = ripper.noExtension(file);
 				System.out.println("drop table if exists " + tableName+";");
 			}
 		});
-		ripper.	walkFiles(new File("K:/Eur"), ripper.extension("csv"), new ICallback<File>() {
+		ripper.	walkFiles(root, ripper.extension("csv"), new ICallback<File>() {
 			@Override
 			public void call(File file) {
 				System.out.println(ripper.createStatement(file));
 			}
 		});
-		ripper.	walkFiles(new File("K:/Eur"),ripper. extension("csv"), new ICallback<File>() {
+		ripper.	walkFiles(root,ripper. extension("csv"), new ICallback<File>() {
 			@Override
 			public void call(File file) {
 				String tableName = ripper.noExtension(file);
