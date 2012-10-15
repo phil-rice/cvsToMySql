@@ -4,9 +4,9 @@ import java.io.File;
 
 public class FilesToMySql {
 	public static void main(String[] args) {
+		File root = new File("L:/Eur");
 		final FileRipper ripper = new FileRipper();
 		ripper.map("\"Autonumber(1,1)\"", "autonumber");
-		File root = new File("L:/Eur");
 		ripper.walkFiles(root, ripper.extension("csv"), new ICallback<File>() {
 			@Override
 			public void call(File file) {
